@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,7 +33,7 @@ public class MyActivity extends Activity {
 
         mAdapter = new EffectAdapter(this);
         mListView.setAdapter(mAdapter);
-
+        final Animator[] preanimation = new Animator[1];
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -49,6 +50,7 @@ public class MyActivity extends Activity {
                             @Override
                             public void onAnimationStart(Animator animation) {
 
+                                preanimation[0] =animation;
                             }
 
                             @Override
@@ -57,7 +59,10 @@ public class MyActivity extends Activity {
 
                             @Override
                             public void onAnimationCancel(Animator animation) {
-                                Toast.makeText(MyActivity.this, "canceled previous animation", Toast.LENGTH_SHORT).show();
+                                Log.d("animation",String.valueOf(animation));
+                                Log.d("preanimation",String.valueOf(preanimation[0]));
+                                if(!(preanimation[0].equals(animation)))
+                                Toast.makeText(MyActivity.this, "Canceled previous animation", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -81,6 +86,7 @@ public class MyActivity extends Activity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
+
             rope = YoYo.with(Techniques.FadeIn).duration(1000).playOn(mTarget);// after start,just click mTarget view, rope is not init
         }
     }
